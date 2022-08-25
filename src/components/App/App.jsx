@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect, useRef } from 'react';
 
 import { nanoid } from 'nanoid';
 import { Wrapper } from './App.styled';
@@ -15,6 +15,26 @@ function App() {
   ]);
 
   const [filter, setFilter] = useState('');
+  const firstRender = useRef (true);
+
+
+
+  useEffect(() => {
+    const paeserContacts=JSON.parse(localStorage.getItem('contacts'));
+    if (paeserContacts) {
+      setContacts(paeserContacts);
+    }
+
+  },[]);  
+
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    localStorage.setItem('contacts',JSON.stringify(contacts));
+
+  },[contacts]);  
 
   const handleSubmit = ({ name, number }, { resetForm }) => {
     const contact = {
